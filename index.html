@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacking Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+        
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background-color: #0a0a0a;
+            color: #00ff00;
+            overflow-x: hidden;
+        }
+        
+        .terminal-text {
+            color: #00ff00;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+        }
+        
+        .glitch-effect {
+            position: relative;
+        }
+        
+        .glitch-effect::before, .glitch-effect::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+        }
+        
+        .glitch-effect::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff00ff;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
+        }
+        
+        .glitch-effect::after {
+            left: -2px;
+            text-shadow: -2px 0 #00ffff;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim-2 2s infinite linear alternate-reverse;
+        }
+        
+        @keyframes glitch-anim-1 {
+            0% { clip: rect(32px, 9999px, 38px, 0); }
+            10% { clip: rect(12px, 9999px, 28px, 0); }
+            20% { clip: rect(52px, 9999px, 37px, 0); }
+            30% { clip: rect(42px, 9999px, 49px, 0); }
+            40% { clip: rect(28px, 9999px, 55px, 0); }
+            50% { clip: rect(17px, 9999px, 35px, 0); }
+            60% { clip: rect(48px, 9999px, 34px, 0); }
+            70% { clip: rect(23px, 9999px, 39px, 0); }
+            80% { clip: rect(54px, 9999px, 46px, 0); }
+            90% { clip: rect(29px, 9999px, 58px, 0); }
+            100% { clip: rect(62px, 9999px, 32px, 0); }
+        }
+        
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(62px, 9999px, 32px, 0); }
+            10% { clip: rect(29px, 9999px, 58px, 0); }
+            20% { clip: rect(54px, 9999px, 46px, 0); }
+            30% { clip: rect(23px, 9999px, 39px, 0); }
+            40% { clip: rect(48px, 9999px, 34px, 0); }
+            50% { clip: rect(17px, 9999px, 35px, 0); }
+            60% { clip: rect(28px, 9999px, 55px, 0); }
+            70% { clip: rect(42px, 9999px, 49px, 0); }
+            80% { clip: rect(52px, 9999px, 37px, 0); }
+            90% { clip: rect(12px, 9999px, 28px, 0); }
+            100% { clip: rect(32px, 9999px, 38px, 0); }
+        }
+        
+        .scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 255, 0, 0.1) 0%,
+                rgba(0, 255, 0, 0.1) 50%,
+                transparent 51%,
+                transparent 100%
+            );
+            background-size: 100% 4px;
+            animation: scanline 6s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes scanline {
+            0% { transform: translateY(0%); }
+            100% { transform: translateY(100%); }
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: linear-gradient(90deg, #00ff00 0%, #00ff00 0%, #0a0a0a 0%);
+            animation: progress 8s linear forwards;
+        }
+        
+        @keyframes progress {
+            0% { background: linear-gradient(90deg, #00ff00 0%, #00ff00 0%, #0a0a0a 0%); }
+            10% { background: linear-gradient(90deg, #00ff00 0%, #00ff00 10%, #0a0a0a 10%); }
+            20% { background: linear-gradient(90deg, #00ff00 0%, #00ff00 20%, #0a0a0a 20%); }
+            30% { background: linear-gradient(90deg, #00ff00 0%, #00ff00 30%, #0a0a0a 30%); }
+            40% { background: linear-gradient(90deg, #00ff00 0%, #00ff00 40%, #0a0a0a 40%); }
+            50% { background: linear-gradient(90deg, #00ff00 0%, #00ff00 50%, #0a0a0a 50%); }
+            60% { background: linear-gradient(90deg, #00ff00 0%, #00ff00 60%, #0a0a0a 60%); }
+            70% { background: linear-gradient(90deg, #00ff00 0%, #00ff00 70%, #0a0a0a 70%); }
+            80% { background: linear-gradient(90deg, #00ff00 0%, #00ff00 80%, #0a0a0a 80%); }
+            90% { background: linear-gradient(90deg, #00ff00 0%, #00ff00 90%, #0a0a0a 90%); }
+            100% { background: linear-gradient(90deg, #00ff00 0%, #00ff00 100%, #0a0a0a 100%); }
+        }
+        
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .camera-feed {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"><rect width="300" height="300" fill="black"/><circle cx="150" cy="150" r="100" fill="none" stroke="gray" stroke-width="1"/><circle cx="150" cy="150" r="80" fill="none" stroke="gray" stroke-width="1"/><circle cx="150" cy="150" r="60" fill="none" stroke="gray" stroke-width="1"/><circle cx="150" cy="150" r="40" fill="none" stroke="gray" stroke-width="1"/><circle cx="150" cy="150" r="20" fill="none" stroke="gray" stroke-width="1"/><rect x="50" y="50" width="200" height="200" fill="none" stroke="gray" stroke-width="1"/><rect x="70" y="70" width="160" height="160" fill="none" stroke="gray" stroke-width="1"/><rect x="90" y="90" width="120" height="120" fill="none" stroke="gray" stroke-width="1"/><rect x="110" y="110" width="80" height="80" fill="none" stroke="gray" stroke-width="1"/><rect x="130" y="130" width="40" height="40" fill="none" stroke="gray" stroke-width="1"/></svg>');
+            background-size: cover;
+            position: relative;
+        }
+        
+        .camera-noise {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 100%),
+                        repeating-linear-gradient(0deg, 
+                            rgba(0,0,0,0.2) 0px, 
+                            rgba(0,0,0,0.2) 1px, 
+                            transparent 1px, 
+                            transparent 2px);
+            animation: noise 0.3s infinite;
+            opacity: 0.5;
+        }
+        
+        @keyframes noise {
+            0% { background-position: 0 0; }
+            10% { background-position: -5% -5%; }
+            20% { background-position: -10% 5%; }
+            30% { background-position: 5% -10%; }
+            40% { background-position: -5% 15%; }
+            50% { background-position: -10% 5%; }
+            60% { background-position: 15% 0%; }
+            70% { background-position: 0% 10%; }
+            80% { background-position: -15% 0%; }
+            90% { background-position: 10% 5%; }
+            100% { background-position: 5% 0%; }
+        }
+        
+        .fake-map {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"><rect width="300" height="300" fill="%23111111"/><path d="M50,50 L250,50 L250,250 L50,250 Z" fill="none" stroke="%2300ff00" stroke-width="2"/><path d="M70,70 L230,70 L230,230 L70,230 Z" fill="none" stroke="%2300ff00" stroke-width="1"/><path d="M90,90 L210,90 L210,210 L90,210 Z" fill="none" stroke="%2300ff00" stroke-width="1"/><circle cx="150" cy="150" r="30" fill="%2300ff00" opacity="0.2"/><circle cx="150" cy="150" r="10" fill="%23ff0000"/><text x="150" y="140" font-family="Arial" font-size="12" fill="%2300ff00" text-anchor="middle">TARGET LOCATION</text><text x="150" y="170" font-family="Arial" font-size="10" fill="%2300ff00" text-anchor="middle">LAT: 35.6895° N</text><text x="150" y="185" font-family="Arial" font-size="10" fill="%2300ff00" text-anchor="middle">LONG: 139.6917° E</text></svg>');
+            background-size: cover;
+        }
+        
+        .code-input {
+            font-family: 'Share Tech Mono', monospace;
+            letter-spacing: 0.5em;
+            text-align: center;
+        }
+        
+        .wifi-scan-item {
+            border-bottom: 1px solid #00ff00;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .blink {
+            animation: blink 1s step-end infinite;
+        }
+        
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Matrix Rain Background -->
+    <canvas id="matrix" class="matrix-rain"></canvas>
+    
+    <!-- Scanline Effect -->
+    <div class="scanline"></div>
+    
+    <!-- Main App Container -->
+    <div class="container mx-auto px-4 py-6 flex-1 flex flex-col max-w-md">
+        <!-- App Header -->
+        <header class="flex items-center justify-between mb-6">
+            <div class="glitch-effect" data-text="HACKING TOOL v4.2.0">
+                <h1 class="text-xl font-bold terminal-text">HACKING TOOL v4.2.0</h1>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="text-xs terminal-text">SYSTEM: <span class="blink">ONLINE</span></span>
+                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col">
+            <!-- Target Input -->
+            <div class="mb-6">
+                <label for="target" class="block text-sm terminal-text mb-2">ENTER TARGET PHONE NUMBER:</label>
+                <div class="flex">
+                    <input type="text" id="target" class="flex-1 bg-black border border-green-500 terminal-text px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-500" placeholder="+98 XXX XXX XXXX">
+                    <button id="startHack" class="ml-2 bg-red-700 hover:bg-red-600 terminal-text px-4 py-2 border border-red-500">
+                        <i class="fas fa-skull-crossbones mr-1"></i> HACK
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Terminal Output -->
+            <div id="terminal" class="flex-1 bg-black border border-green-500 p-3 mb-6 overflow-y-auto max-h-64 terminal-text text-sm">
+                <div class="mb-2">> SYSTEM INITIALIZED...</div>
+                <div class="mb-2">> WAITING FOR TARGET INPUT...</div>
+                <div class="mb-2">> READY TO COMMENCE OPERATION</div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div id="progressContainer" class="hidden mb-6">
+                <div class="flex justify-between text-xs terminal-text mb-1">
+                    <span>HACKING PROGRESS:</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar w-full"></div>
+            </div>
+            
+            <!-- Features Tabs -->
+            <div class="mt-auto">
+                <div class="flex border-b border-green-500 mb-4">
+                    <button id="tabCamera" class="flex-1 py-2 text-center terminal-text border-b-2 border-transparent hover:border-green-500">
+                        <i class="fas fa-camera mr-1"></i> CAMERA
+                    </button>
+                    <button id="tabLocation" class="flex-1 py-2 text-center terminal-text border-b-2 border-transparent hover:border-green-500">
+                        <i class="fas fa-map-marker-alt mr-1"></i> LOCATION
+                    </button>
+                    <button id="tabCodes" class="flex-1 py-2 text-center terminal-text border-b-2 border-transparent hover:border-green-500">
+                        <i class="fas fa-key mr-1"></i> CODES
+                    </button>
+                    <button id="tabWifi" class="flex-1 py-2 text-center terminal-text border-b-2 border-transparent hover:border-green-500">
+                        <i class="fas fa-wifi mr-1"></i> WIFI
+                    </button>
+                </div>
+                
+                <!-- Tab Content -->
+                <div id="tabContent" class="hidden">
+                    <!-- Camera Feed -->
+                    <div id="cameraContent" class="hidden">
+                        <div class="camera-feed w-full h-48 mb-3 relative">
+                            <div class="camera-noise"></div>
+                            <div class="absolute bottom-2 left-2 text-xs terminal-text">
+                                <span class="blink">LIVE</span> CAMERA FEED
+                            </div>
+                        </div>
+                        <div class="flex justify-between text-xs terminal-text">
+                            <span>RESOLUTION: 640x480</span>
+                            <span>FPS: 24</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Location Map -->
+                    <div id="locationContent" class="hidden">
+                        <div class="fake-map w-full h-48 mb-3"></div>
+                        <div class="flex justify-between text-xs terminal-text">
+                            <span>GPS: 35.6895° N, 139.6917° E</span>
+                            <span>ACCURACY: ±5m</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Security Codes -->
+                    <div id="codesContent" class="hidden">
+                        <div class="mb-3">
+                            <label class="block text-sm terminal-text mb-2">ENTER SECURITY CODES:</label>
+                            <input type="text" id="securityCode" class="w-full bg-black border border-green-500 terminal-text px-3 py-2 code-input focus:outline-none focus:ring-1 focus:ring-green-500" maxlength="6" placeholder="XXXXXX">
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 mb-3">
+                            <button class="bg-gray-900 hover:bg-gray-800 terminal-text py-2 border border-green-500 code-btn">1</button>
+                            <button class="bg-gray-900 hover:bg-gray-800 terminal-text py-2 border border-green-500 code-btn">2</button>
+                            <button class="bg-gray-900 hover:bg-gray-800 terminal-text py-2 border border-green-500 code-btn">3</button>
+                            <button class="bg-gray-900 hover:bg-gray-800 terminal-text py-2 border border-green-500 code-btn">4</button>
+                            <button class="bg-gray-900 hover:bg-gray-800 terminal-text py-2 border border-green-500 code-btn">5</button>
+                            <button class="bg-gray-900 hover:bg-gray-800 terminal-text py-2 border border-green-500 code-btn">6</button>
+                            <button class="bg-gray-900 hover:bg-gray-800 terminal-text py-2 border border-green-500 code-btn">7</button>
+                            <button class="bg-gray-900 hover:bg-gray-800 terminal-text py-2 border border-green-500 code-btn">8</button>
+                            <button class="bg-gray-900 hover:bg-gray-800 terminal-text py-2 border border-green-500 code-btn">9</button>
+                            <button class="bg-gray-900 hover:bg-gray-800 terminal-text py-2 border border-green-500 code-btn">0</button>
+                            <button class="bg-gray-900 hover:bg-gray-800 terminal-text py-2 border border-green-500 code-btn">#</button>
+                            <button class="bg-gray-900 hover:bg-gray-800 terminal-text py-2 border border-green-500 code-btn">*</button>
+                        </div>
+                        <div class="flex justify-between">
+                            <button id="clearCode" class="text-xs terminal-text px-3 py-1 border border-green-500 hover:bg-gray-900">CLEAR</button>
+                            <button id="submitCode" class="text-xs terminal-text px-3 py-1 bg-green-900 hover:bg-green-800 border border-green-500">SUBMIT</button>
+                        </div>
+                    </div>
+                    
+                    <!-- WiFi Scanner -->
+                    <div id="wifiContent" class="hidden">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-sm terminal-text">NEARBY NETWORKS:</span>
+                            <button id="scanWifi" class="text-xs terminal-text px-3 py-1 bg-green-900 hover:bg-green-800 border border-green-500">
+                                <i class="fas fa-sync-alt mr-1"></i> SCAN
+                            </button>
+                        </div>
+                        <div id="wifiList" class="space-y-2">
+                            <!-- WiFi networks will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="mt-6 text-xs terminal-text text-center opacity-70">
+            <div class="flex justify-center space-x-4 mb-2">
+                <span>CONNECTION: SECURE</span>
+                <span>ENCRYPTION: AES-256</span>
+            </div>
+            <div>WARNING: THIS IS A SIMULATION TOOL ONLY. NO REAL HACKING OCCURS.</div>
+        </footer>
+    </div>
+
+    <script>
+        // Matrix Rain Effect
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const symbols = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
+        
+        const alphabet = katakana + latin + nums + symbols;
+        
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        
+        const rainDrops = [];
+        
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = 1;
+        }
+        
+        const draw = () => {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#00ff00';
+            ctx.font = fontSize + 'px monospace';
+            
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        };
+        
+        setInterval(draw, 30);
+        
+        // Resize handler
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // App functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const terminal = document.getElementById('terminal');
+            const startHackBtn = document.getElementById('startHack');
+            const targetInput = document.getElementById('target');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressPercent = document.getElementById('progressPercent');
+            const tabContent = document.getElementById('tabContent');
+            const tabCamera = document.getElementById('tabCamera');
+            const tabLocation = document.getElementById('tabLocation');
+            const tabCodes = document.getElementById('tabCodes');
+            const tabWifi = document.getElementById('tabWifi');
+            const cameraContent = document.getElementById('cameraContent');
+            const locationContent = document.getElementById('locationContent');
+            const codesContent = document.getElementById('codesContent');
+            const wifiContent = document.getElementById('wifiContent');
+            const securityCode = document.getElementById('securityCode');
+            const codeButtons = document.querySelectorAll('.code-btn');
+            const clearCode = document.getElementById('clearCode');
+            const submitCode = document.getElementById('submitCode');
+            const scanWifi = document.getElementById('scanWifi');
+            const wifiList = document.getElementById('wifiList');
+            
+            // Terminal logging function
+            const logToTerminal = (message, delay = 0) => {
+                setTimeout(() => {
+                    const div = document.createElement('div');
+                    div.className = 'mb-2';
+                    div.innerHTML = '> ' + message;
+                    terminal.appendChild(div);
+                    terminal.scrollTop = terminal.scrollHeight;
+                }, delay);
+            };
+            
+            // Start hacking simulation
+            startHackBtn.addEventListener('click', () => {
+                const target = targetInput.value.trim();
+                
+                if (!target) {
+                    logToTerminal('ERROR: NO TARGET SPECIFIED');
+                    return;
+                }
+                
+                // Clear terminal
+                terminal.innerHTML = '';
+                
+                // Show progress bar
+                progressContainer.classList.remove('hidden');
+                
+                // Start hacking sequence
+                logToTerminal('INITIATING HACKING SEQUENCE...');
+                logToTerminal('TARGET ACQUIRED: ' + target, 500);
+                logToTerminal('CONNECTING TO MOBILE NETWORK...', 1000);
+                logToTerminal('BYPASSING FIREWALL...', 1500);
+                logToTerminal('ESTABLISHING CONNECTION TO TARGET DEVICE...', 2000);
+                logToTerminal('ACCESSING CAMERA FEED...', 2500);
+                logToTerminal('CAMERA ACCESS GRANTED', 3000);
+                logToTerminal('DOWNLOADING FILES FROM TARGET DEVICE...', 3500);
+                logToTerminal('LOCATING TARGET DEVICE...', 4000);
+                logToTerminal('TARGET LOCATION IDENTIFIED', 4500);
+                logToTerminal('SCANNING FOR NEARBY NETWORKS...', 5000);
+                logToTerminal('HACKING COMPLETE', 5500);
+                
+                // Show tabs after hacking starts
+                setTimeout(() => {
+                    tabContent.classList.remove('hidden');
+                    cameraContent.classList.remove('hidden');
+                }, 3000);
+                
+                // Update progress percentage
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 1;
+                    progressPercent.textContent = progress + '%';
+                    
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                    }
+                }, 80);
+            });
+            
+            // Tab switching
+            tabCamera.addEventListener('click', () => {
+                cameraContent.classList.remove('hidden');
+                locationContent.classList.add('hidden');
+                codesContent.classList.add('hidden');
+                wifiContent.classList.add('hidden');
+            });
+            
+            tabLocation.addEventListener('click', () => {
+                cameraContent.classList.add('hidden');
+                locationContent.classList.remove('hidden');
+                codesContent.classList.add('hidden');
+                wifiContent.classList.add('hidden');
+            });
+            
+            tabCodes.addEventListener('click', () => {
+                cameraContent.classList.add('hidden');
+                locationContent.classList.add('hidden');
+                codesContent.classList.remove('hidden');
+                wifiContent.classList.add('hidden');
+            });
+            
+            tabWifi.addEventListener('click', () => {
+                cameraContent.classList.add('hidden');
+                locationContent.classList.add('hidden');
+                codesContent.classList.add('hidden');
+                wifiContent.classList.remove('hidden');
+            });
+            
+            // Security code input
+            codeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (securityCode.value.length < 6) {
+                        securityCode.value += button.textContent;
+                    }
+                });
+            });
+            
+            clearCode.addEventListener('click', () => {
+                securityCode.value = '';
+            });
+            
+            submitCode.addEventListener('click', () => {
+                if (securityCode.value.length === 6) {
+                    logToTerminal('SECURITY CODE ACCEPTED: ' + securityCode.value);
+                    securityCode.value = '';
+                } else {
+                    logToTerminal('ERROR: CODE MUST BE 6 DIGITS');
+                }
+            });
+            
+            // WiFi scanning
+            const wifiNetworks = [
+                { name: 'HomeWiFi', strength: 4, encryption: 'WPA2', password: 'home1234' },
+                { name: 'NeighborNet', strength: 3, encryption: 'WPA', password: 'neighbor567' },
+                { name: 'CoffeeShop', strength: 2, encryption: 'OPEN', password: 'none' },
+                { name: 'Xiaomi_5G', strength: 3, encryption: 'WPA2', password: 'xiaomi2023' },
+                { name: 'HiddenNetwork', strength: 1, encryption: 'WEP', password: 'secret' }
+            ];
+            
+            scanWifi.addEventListener('click', () => {
+                wifiList.innerHTML = '';
+                
+                wifiNetworks.forEach((network, index) => {
+                    setTimeout(() => {
+                        const item = document.createElement('div');
+                        item.className = 'wifi-scan-item p-2 bg-gray-900';
+                        
+                        let strengthBars = '';
+                        for (let i = 0; i < 4; i++) {
+                            strengthBars += `<i class="fas fa-wifi ${i < network.strength ? 'text-green-500' : 'text-gray-500'} ${i === 0 ? 'fa-rotate-270' : ''}"></i>`;
+                        }
+                        
+                        item.innerHTML = `
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <span class="font-bold">${network.name}</span>
+                                    <div class="text-xs mt-1">
+                                        <span class="mr-2">${network.encryption}</span>
+                                        ${strengthBars}
+                                    </div>
+                                </div>
+                                <div class="text-xs">
+                                    <span class="text-green-500">${network.password}</span>
+                                </div>
+                            </div>
+                        `;
+                        
+                        wifiList.appendChild(item);
+                    }, index * 300);
+                });
+                
+                logToTerminal('WIFI SCAN COMPLETE - FOUND ' + wifiNetworks.length + ' NETWORKS');
+            });
+        });
+    </script>
+</body>
+</html>
